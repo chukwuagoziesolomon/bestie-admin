@@ -1,0 +1,115 @@
+/* DashboardHome.css */
+
+/* Welcome Section */
+.welcome-section {
+  margin-bottom: 2rem;
+  text-align: left;
+  padding: 0;
+}
+
+.welcome-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #1a202c;
+  margin-bottom: 0.5rem;
+}
+
+.welcome-subtitle {
+  color: #4a5568;
+  margin: 0;
+  font-size: 1rem;
+}
+
+/* Stats Grid */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.dashboard-home {
+  padding: 1.5rem 2rem;
+  max-width: 1600px;
+  margin: 0 auto;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: calc(100vh - 80px); /* Account for header height */
+  overflow-y: auto;
+}
+
+/* Chart and Activities Grid */
+.charts-activities-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.chart-container {
+  min-height: 400px;
+}
+
+/* Ensure the chart has enough space */
+.recharts-wrapper {
+  width: 100% !important;
+  overflow: visible !important;
+}
+
+.recharts-surface {
+  overflow: visible !important;
+}
+
+/* Fix for tooltips being cut off */
+.recharts-tooltip-wrapper {
+  z-index: 10;
+}
+
+/* Ensure the chart container doesn't cause horizontal scroll */
+.chart-container > div {
+  max-width: 100%;
+  overflow: visible !important;
+}
+
+.chart-container {
+  background: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  padding: 1.5rem;
+  height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+  overflow: visible;
+  position: relative;
+  z-index: 1;
+}
+
+/* Stat Card adjustments */
+.stat-card {
+  width: 100%;
+  box-sizing: border-box;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  border: 1px solid #e5e7eb;
+  padding: 1.5rem;
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* Test Panel Section */
+.test-panel-section {
+  margin-top: 2rem;
+  padding: 0;
+}
+
