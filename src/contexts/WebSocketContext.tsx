@@ -156,7 +156,7 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({ children }
     console.log('Token available:', !!token);
     console.log('Token preview:', token ? token.substring(0, 20) + '...' : 'None');
     
-    const baseUrl = process.env.REACT_APP_API_URL || 'http://127.0.0.1:8000';
+    const baseUrl = process.env.REACT_APP_API_URL || 'https://bestie-server.onrender.com';
     const wsBaseUrl = baseUrl.replace('http://', 'ws://').replace('https://', 'wss://');
     console.log('Base URL:', baseUrl);
     console.log('WebSocket Base URL:', wsBaseUrl);

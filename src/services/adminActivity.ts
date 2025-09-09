@@ -31,7 +31,7 @@ export interface WebhookActivityPayload {
   metadata?: Record<string, any>;
 }
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://bestie-server.onrender.com';
 
 class AdminActivityService {
   private async makeRequest(endpoint: string, options: RequestInit = {}): Promise<Response> {

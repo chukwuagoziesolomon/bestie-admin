@@ -48,7 +48,7 @@ const VerificationDetails: React.FC<VerificationDetailsProps> = ({
   }, [state]);
 
   const API_BASE = useMemo(() => {
-    const raw = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+    const raw = process.env.REACT_APP_API_URL || 'https://bestie-server.onrender.com';
     const base = raw.replace(/\/$/, '');
     return base.endsWith('/api') ? base : `${base}/api`;
   }, []);
