@@ -42,3 +42,4 @@ export const getCloudinaryUrl = (publicId: string, transformation?: string): str
   
   return `${baseUrl}/${publicId}`;
 };
+

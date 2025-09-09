@@ -201,7 +201,7 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({ children }
     setConnectionStatus('connecting');
     
     // Try different WebSocket URLs as per the guide
-    const baseUrl = process.env.REACT_APP_API_URL || 'http://127.0.0.1:8000';
+    const baseUrl = process.env.REACT_APP_API_URL || 'https://bestie-server.onrender.com';
     const wsBaseUrl = baseUrl.replace('http://', 'ws://').replace('https://', 'wss://');
     
     console.log('=== WebSocket URL Construction ===');

@@ -57,3 +57,4 @@ export interface CloudinaryConfig {
   allowedFormats: string[];
   imageTransformations: ImageTransformations;
 }
+

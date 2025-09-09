@@ -91,3 +91,4 @@ export const formatPercentage = (value: number): string => {
 export const getTrendIcon = (trend: 'up' | 'down') => {
   return trend === 'up' ? '↗' : '↘';
 };
+

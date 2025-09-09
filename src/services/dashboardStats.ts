@@ -101,3 +101,4 @@ export const getTrendIcon = (trend: 'up' | 'down'): string => {
 export const getTrendColorClass = (trend: 'up' | 'down'): string => {
   return trend === 'up' ? 'up' : 'down';
 };
+

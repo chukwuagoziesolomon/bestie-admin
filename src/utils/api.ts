@@ -1,5 +1,5 @@
 // Normalize base URL to always include the '/api' prefix
-const RAW_API_BASE_URL = process.env.REACT_APP_API_URL || 'http://127.0.0.1:8000';
+const RAW_API_BASE_URL = process.env.REACT_APP_API_URL || 'https://bestie-server.onrender.com';
 const API_BASE_URL = RAW_API_BASE_URL.replace(/\/$/, '');
 const API_PREFIXED_BASE = API_BASE_URL.endsWith('/api') ? API_BASE_URL : `${API_BASE_URL}/api`;
 
@@ -241,7 +241,7 @@ export const getCurrentUser = (): User | null => {
 // API calls
 // Ensure we have a clean base URL without trailing slash
 const getBaseUrl = () => {
-  const base = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8000';
+  const base = process.env.REACT_APP_API_URL || 'https://bestie-server.onrender.com';
   return base.endsWith('/') ? base.slice(0, -1) : base;
 };
 
