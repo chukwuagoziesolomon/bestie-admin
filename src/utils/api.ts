@@ -1,7 +1,7 @@
-// Normalize base URL to always include the '/api' prefix
-const RAW_API_BASE_URL = process.env.REACT_APP_API_URL || 'https://bestie-server.onrender.com';
-const API_BASE_URL = RAW_API_BASE_URL.replace(/\/$/, '');
-const API_PREFIXED_BASE = API_BASE_URL.endsWith('/api') ? API_BASE_URL : `${API_BASE_URL}/api`;
+import { API_PREFIXED_BASE, CLEAN_API_BASE_URL, logApiConfig } from '../config/api';
+
+// Log API configuration on import
+logApiConfig();
 
 // Helper function to get CSRF token from cookies
 const getCSRFToken = (): string | null => {
@@ -239,10 +239,10 @@ export const getCurrentUser = (): User | null => {
 };
 
 // API calls
-// Ensure we have a clean base URL without trailing slash
+// Use centralized configuration
 const getBaseUrl = () => {
-  const base = process.env.REACT_APP_API_URL || 'https://bestie-server.onrender.com';
-  return base.endsWith('/') ? base.slice(0, -1) : base;
+  console.log('getBaseUrl() called, returning:', CLEAN_API_BASE_URL);
+  return CLEAN_API_BASE_URL;
 };
 
 // Refresh the access token using the refresh token
@@ -277,7 +277,11 @@ export const login = async (credentials: LoginCredentials): Promise<LoginRespons
     const baseUrl = getBaseUrl();
     const loginUrl = `${baseUrl}/api/user/admin/login/`;
     
-    console.log('Making login request to:', loginUrl);
+    console.log('=== LOGIN DEBUG ===');
+    console.log('Environment REACT_APP_API_URL:', process.env.REACT_APP_API_URL);
+    console.log('Base URL from getBaseUrl():', baseUrl);
+    console.log('Full login URL:', loginUrl);
+    console.log('==================');
     
     const response = await fetch(loginUrl, {
       method: 'POST',

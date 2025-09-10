@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
 import { getAuthToken } from '../utils/api';
+import { WS_BASE_URL, WS_ENDPOINTS } from '../config/api';
 
 interface ActivityData {
   id: number;
@@ -156,14 +157,11 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({ children }
     console.log('Token available:', !!token);
     console.log('Token preview:', token ? token.substring(0, 20) + '...' : 'None');
     
-    const baseUrl = process.env.REACT_APP_API_URL || 'https://bestie-server.onrender.com';
-    const wsBaseUrl = baseUrl.replace('http://', 'ws://').replace('https://', 'wss://');
-    console.log('Base URL:', baseUrl);
-    console.log('WebSocket Base URL:', wsBaseUrl);
+    console.log('Base URL from config:', WS_BASE_URL);
     
     const testUrls = [
-      `${wsBaseUrl}/ws/admin/activity/?token=${token}`,
-      `${wsBaseUrl}/admin/activity/?token=${token}`
+      `${WS_BASE_URL}${WS_ENDPOINTS.ADMIN_ACTIVITY}?token=${token}`,
+      `${WS_BASE_URL}${WS_ENDPOINTS.ADMIN_ACTIVITY_ALT}?token=${token}`
     ];
     
     console.log('Test URLs:', testUrls);
@@ -200,19 +198,13 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({ children }
     console.log('Attempting to connect to WebSocket with token:', token.substring(0, 20) + '...');
     setConnectionStatus('connecting');
     
-    // Try different WebSocket URLs as per the guide
-    const baseUrl = process.env.REACT_APP_API_URL || 'https://bestie-server.onrender.com';
-    const wsBaseUrl = baseUrl.replace('http://', 'ws://').replace('https://', 'wss://');
-    
     console.log('=== WebSocket URL Construction ===');
-    console.log('Environment REACT_APP_API_URL:', process.env.REACT_APP_API_URL);
-    console.log('Base URL:', baseUrl);
-    console.log('WebSocket Base URL:', wsBaseUrl);
+    console.log('WS_BASE_URL from config:', WS_BASE_URL);
     
     // Try both URL patterns as mentioned in the guide
     const wsUrls = [
-      `${wsBaseUrl}/ws/admin/activity/?token=${token}`,  // Prefixed route
-      `${wsBaseUrl}/admin/activity/?token=${token}`       // Non-prefixed route (compatibility)
+      `${WS_BASE_URL}${WS_ENDPOINTS.ADMIN_ACTIVITY}?token=${token}`,  // Prefixed route
+      `${WS_BASE_URL}${WS_ENDPOINTS.ADMIN_ACTIVITY_ALT}?token=${token}`  // Non-prefixed route (compatibility)
     ];
     
     console.log('Trying WebSocket URLs:', wsUrls);

@@ -1,4 +1,5 @@
 import { getAuthToken } from './auth';
+import { API_BASE_URL } from '../config/api';
 
 export interface AdminActivity {
   id: string;
@@ -31,7 +32,7 @@ export interface WebhookActivityPayload {
   metadata?: Record<string, any>;
 }
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://bestie-server.onrender.com';
+// API_BASE_URL is now imported from config/api.ts
 
 class AdminActivityService {
   private async makeRequest(endpoint: string, options: RequestInit = {}): Promise<Response> {

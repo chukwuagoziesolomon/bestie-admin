@@ -6,6 +6,7 @@ import { VerificationRequest } from '../services/verification';
 import axios from 'axios';
 import { getAuthToken } from '../services/auth';
 import { useParams, useLocation } from 'react-router-dom';
+import { API_BASE_URL } from '../config/api';
 
 interface VerificationDetailsProps {
   request: VerificationRequest;
@@ -48,8 +49,7 @@ const VerificationDetails: React.FC<VerificationDetailsProps> = ({
   }, [state]);
 
   const API_BASE = useMemo(() => {
-    const raw = process.env.REACT_APP_API_URL || 'https://bestie-server.onrender.com';
-    const base = raw.replace(/\/$/, '');
+    const base = API_BASE_URL.replace(/\/$/, '');
     return base.endsWith('/api') ? base : `${base}/api`;
   }, []);
 
