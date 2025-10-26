@@ -562,12 +562,12 @@ const Couriers: React.FC = () => {
                     <td className="courier-name">{courier.name}</td>
                     <td className="courier-phone">{courier.phone}</td>
                     <td className="courier-deliveries">
-                      {courier.completed_deliveries.toLocaleString()}
+                      {courier.completed_deliveries ? courier.completed_deliveries.toLocaleString() : '0'}
                     </td>
                     <td className="courier-rating">
                       <div className="rating">
                         <Star size={16} className="star-icon" />
-                        <span>{courier.rating.toFixed(1)}</span>
+                        <span>{courier.rating ? courier.rating.toFixed(1) : '0.0'}</span>
                       </div>
                     </td>
                     <td>

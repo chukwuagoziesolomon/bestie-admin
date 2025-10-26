@@ -18,13 +18,13 @@ const Analytics: React.FC = () => {
       try {
         setLoading(true);
         setError(null);
-        
+
         const data = await getDashboardStats('week');
         setStats(data);
       } catch (err) {
         console.error('Error fetching analytics stats:', err);
         setError('Failed to load analytics data');
-        
+
         // Fall back to hardcoded data if API fails
         setStats({
           total_orders: { value: 90, trend: 'up', change_percentage: 1.3, comparison_text: 'Up from past week', icon: 'package' },

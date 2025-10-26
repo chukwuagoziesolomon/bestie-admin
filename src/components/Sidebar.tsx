@@ -9,7 +9,9 @@ import {
   BarChart3,
   HelpCircle,
   Users,
-  UserX
+  UserX,
+  Settings,
+  DollarSign
 } from 'lucide-react';
 import './Sidebar.css';
 
@@ -46,6 +48,8 @@ const Sidebar: React.FC = () => {
     { icon: <Package size={20} />, label: 'Orders', to: '/orders' },
     { icon: <CheckCircle size={20} />, label: 'Verification', to: '/verification-requests' },
     { icon: <BarChart3 size={20} />, label: 'Analytics', to: '/analytics' },
+    { icon: <DollarSign size={20} />, label: 'Profit', to: '/profit' },
+    { icon: <Settings size={20} />, label: 'Settings', to: '/settings' },
   ];
 
   const bottomMenuItems = [

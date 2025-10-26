@@ -4,7 +4,7 @@
  */
 
 // Get the base URL from environment variable with fallback
-export const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://bestie-server.onrender.com';
+export const API_BASE_URL = process.env.REACT_APP_API_URL || process.env.REACT_APP_PROD_API_URL!;
 
 // Clean the base URL (remove trailing slash)
 export const CLEAN_API_BASE_URL = API_BASE_URL.replace(/\/$/, '');
@@ -53,6 +53,10 @@ export const API_ENDPOINTS = {
   
   // Suspended Users
   SUSPENDED_USERS: '/api/admin/users/suspended/',
+
+  // System Settings
+  SETTINGS: '/api/user/admin/settings/',
+  SETTINGS_DETAIL: (key: string) => `/api/user/admin/settings/${key}/`,
 } as const;
 
 // WebSocket endpoints

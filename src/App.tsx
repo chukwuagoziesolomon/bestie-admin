@@ -16,7 +16,9 @@ import VerificationDetailsNew from './components/VerificationDetailsNew';
 import './App.css';
 // ...existing code...
 import Analytics from './components/Analytics';
+import Profit from './components/Profit';
 import Login from './components/Login';
+import Settings from './components/Settings';
 import './App.css';
 
 // A simple wrapper to handle protected routes
@@ -123,6 +125,8 @@ const App: React.FC = () => {
             <Route path="verification-requests-old" element={<VerificationRequest />} />
             <Route path="verification-requests/:id" element={<VerificationDetailsNew />} />
             <Route path="analytics" element={<Analytics />} />
+            <Route path="profit" element={<Profit />} />
+            <Route path="settings" element={<Settings />} />
           </Route>
 
           <Route path="*" element={<Navigate to="/" replace />} />
