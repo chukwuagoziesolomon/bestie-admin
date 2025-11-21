@@ -11,7 +11,8 @@ import {
   Users,
   UserX,
   Settings,
-  DollarSign
+  DollarSign,
+  Image
 } from 'lucide-react';
 import './Sidebar.css';
 
@@ -49,6 +50,7 @@ const Sidebar: React.FC = () => {
     { icon: <CheckCircle size={20} />, label: 'Verification', to: '/verification-requests' },
     { icon: <BarChart3 size={20} />, label: 'Analytics', to: '/analytics' },
     { icon: <DollarSign size={20} />, label: 'Profit', to: '/profit' },
+    { icon: <Image size={20} />, label: 'Banners', to: '/banners' },
     { icon: <Settings size={20} />, label: 'Settings', to: '/settings' },
   ];
 

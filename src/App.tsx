@@ -19,6 +19,7 @@ import Analytics from './components/Analytics';
 import Profit from './components/Profit';
 import Login from './components/Login';
 import Settings from './components/Settings';
+import Banners from './components/Banners';
 import './App.css';
 
 // A simple wrapper to handle protected routes
@@ -126,6 +127,7 @@ const App: React.FC = () => {
             <Route path="verification-requests/:id" element={<VerificationDetailsNew />} />
             <Route path="analytics" element={<Analytics />} />
             <Route path="profit" element={<Profit />} />
+            <Route path="banners" element={<Banners />} />
             <Route path="settings" element={<Settings />} />
           </Route>
 
