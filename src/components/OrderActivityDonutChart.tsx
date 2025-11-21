@@ -94,7 +94,7 @@ const OrderActivityDonutChart: React.FC<OrderActivityDonutChartProps> = ({ class
   };
 
   const createDonutChart = () => {
-    if (!data) return null;
+    if (!data || !data.chart_data || data.chart_data.length === 0) return null;
 
     let cumulativePercentage = 0;
     const segments = data.chart_data.map((item, index) => {
@@ -225,13 +225,13 @@ const OrderActivityDonutChart: React.FC<OrderActivityDonutChartProps> = ({ class
             <div className="total-orders">{data.total_orders}</div>
             <div className="total-label">Total Orders</div>
             <div className="completion-rate">
-              {data.summary.completion_rate.toFixed(1)}% Complete
+              {data.summary?.completion_rate?.toFixed(1) ?? '0'}% Complete
             </div>
           </div>
         </div>
         
         <div className="chart-legend">
-          {data.chart_data.map((item, index) => (
+          {data.chart_data?.map((item, index) => (
             <div key={index} className="legend-item">
               <span 
                 className="legend-color" 

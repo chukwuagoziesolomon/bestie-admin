@@ -171,7 +171,7 @@ const TopVendors: React.FC<TopVendorsProps> = ({ className = '' }) => {
       </div>
       
       <div className="vendors-list">
-        {data.top_vendors.map((vendor, index) => (
+        {data.top_vendors?.map((vendor, index) => (
           <div key={vendor.vendor_id} className="vendor-item">
             <div className="vendor-info">
               <div className="vendor-name">{vendor.business_name}</div>

@@ -55,8 +55,8 @@ export const API_ENDPOINTS = {
   SUSPENDED_USERS: '/api/admin/users/suspended/',
 
   // System Settings
-  SETTINGS: '/api/user/admin/settings/',
-  SETTINGS_DETAIL: (key: string) => `/api/user/admin/settings/${key}/`,
+  SETTINGS: '/user/admin/settings/',
+  SETTINGS_DETAIL: (key: string) => `/user/admin/settings/${key}/`,
 } as const;
 
 // WebSocket endpoints

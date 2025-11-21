@@ -36,7 +36,7 @@ const CouriersTable: React.FC = () => {
       if (activeFilter !== 'all') params.append('user__is_active', activeFilter === 'active' ? 'true' : 'false');
       if (sortField) params.append('ordering', sortField);
 
-      const response = await apiFetch(`/api/user/couriers/?${params.toString()}`);
+      const response = await apiFetch(`/user/couriers/?${params.toString()}`);
       setCouriers(response.results);
     } catch (err) {
       setError('Failed to fetch couriers. Please try again.');

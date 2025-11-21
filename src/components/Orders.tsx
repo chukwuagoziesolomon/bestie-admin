@@ -426,12 +426,12 @@ const Orders: React.FC = () => {
                   <tr key={order.id}>
                     <td className="order-id">#{order.order_number}</td>
                     <td className="order-customer">
-                      <div className="customer-name">{order.customer.name}</div>
-                      <div className="customer-email">{order.customer.email}</div>
+                      <div className="customer-name">{order.customer?.name ?? 'N/A'}</div>
+                      <div className="customer-email">{order.customer?.email ?? 'N/A'}</div>
                     </td>
                     <td className="order-vendor">
-                      <div>{order.vendor.name}</div>
-                      <div className="vendor-id">ID: {order.vendor.id}</div>
+                      <div>{order.vendor?.name ?? 'N/A'}</div>
+                      <div className="vendor-id">ID: {order.vendor?.id ?? 'N/A'}</div>
                     </td>
                     <td className="order-date">{formatDate(order.created_at)}</td>
                     <td className="order-items">{order.item_count}</td>

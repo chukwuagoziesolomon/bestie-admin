@@ -112,7 +112,7 @@ const Couriers: React.FC = () => {
       }
       
       const queryString = params.toString();
-      const url = `/api/user/couriers/${queryString ? `?${queryString}` : ''}`;
+      const url = `/user/couriers/${queryString ? `?${queryString}` : ''}`;
       
       const data = await apiFetch(url);
       

@@ -117,13 +117,13 @@ const RevenueChart: React.FC<RevenueChartProps> = ({
     : 0;
 
   // Use revenue breakdown API data for the top summary section
-  const displayTotalRevenue = revenueBreakdown ? formatCurrency(revenueBreakdown.summary.total_revenue) : 'N0';
-  const displayCurrentAmount = revenueBreakdown ? formatCurrency(revenueBreakdown.summary.total_revenue) : 'N0';
+  const displayTotalRevenue = revenueBreakdown?.summary?.total_revenue ? formatCurrency(revenueBreakdown.summary.total_revenue) : 'N0';
+  const displayCurrentAmount = revenueBreakdown?.summary?.total_revenue ? formatCurrency(revenueBreakdown.summary.total_revenue) : 'N0';
   
   // Calculate percentage change from breakdown data (simplified calculation)
-  const displayPercentageChange = revenueBreakdown ? 
+  const displayPercentageChange = revenueBreakdown?.summary?.total_revenue ? 
     Math.round((revenueBreakdown.summary.total_revenue / 100000) * 3.4) : 0;
-  const displayTrend = revenueBreakdown ? 'up' : 'up';
+  const displayTrend = revenueBreakdown?.summary?.total_revenue ? 'up' : 'up';
   
   // Debug logging for display values
   console.log('Display Values:', {
@@ -178,7 +178,7 @@ const RevenueChart: React.FC<RevenueChartProps> = ({
             <div className="revenue-chart-stats">
               <div className="revenue-chart-main-value">{displayTotalRevenue}</div>
               <div className="revenue-chart-details">
-                <span className="revenue-chart-date">{revenueBreakdown ? revenueBreakdown.period.date : 'No Data'}</span>
+                <span className="revenue-chart-date">{revenueBreakdown?.period?.date ?? 'No Data'}</span>
                 <span className="revenue-chart-amount">{displayCurrentAmount}</span>
                 <span className={`revenue-chart-change ${displayTrend}`}>
                   {displayPercentageChange > 0 ? '+' : ''}{displayPercentageChange}%
@@ -204,7 +204,7 @@ const RevenueChart: React.FC<RevenueChartProps> = ({
           <div className="revenue-chart-stats">
             <div className="revenue-chart-main-value">{displayTotalRevenue}</div>
             <div className="revenue-chart-details">
-              <span className="revenue-chart-date">{revenueBreakdown ? revenueBreakdown.period.date : currentPeriod}</span>
+              <span className="revenue-chart-date">{revenueBreakdown?.period?.date ?? currentPeriod}</span>
               <span className="revenue-chart-amount">{displayCurrentAmount}</span>
               <span className={`revenue-chart-change ${displayTrend}`}>
                 {displayPercentageChange > 0 ? '+' : ''}{displayPercentageChange}%

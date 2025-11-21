@@ -58,6 +58,9 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({ children }
 
   const maxReconnectAttempts = 5;
   const reconnectDelay = 1000;
+  
+  // Use ref to store connect function to avoid circular dependencies
+  const connectRef = React.useRef<(() => void) | null>(null);
 
   const addActivity = useCallback((activity: ActivityData) => {
     console.log('Adding activity:', activity);
@@ -186,6 +189,73 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({ children }
     });
   }, []);
 
+  const handleTokenRefresh = useCallback(() => {
+    console.log('Token expired, attempting to refresh...');
+    const refreshToken = localStorage.getItem('refresh_token') || localStorage.getItem('refresh-token');
+    
+    if (refreshToken) {
+      fetch('/api/token/refresh/', {
+        method: 'POST',
+        body: JSON.stringify({ refresh: refreshToken }),
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include'
+      })
+      .then(res => {
+        if (!res.ok) {
+          throw new Error('Token refresh failed');
+        }
+        return res.json();
+      })
+      .then(data => {
+        console.log('Token refreshed successfully');
+        // Store new access token
+        localStorage.setItem('access_token', data.access);
+        localStorage.setItem('access-token', data.access);
+        // Reconnect WebSocket with new token
+        setTimeout(() => connectRef.current?.(), 500);
+      })
+      .catch(error => {
+        console.error('Failed to refresh token:', error);
+        // Token refresh failed, user needs to log in again
+        setConnectionStatus('error');
+      });
+    } else {
+      console.log('No refresh token available');
+      setConnectionStatus('error');
+    }
+  }, []);
+
+  const attemptReconnect = useCallback(() => {
+    if (isReconnecting || reconnectAttempts >= maxReconnectAttempts) {
+      return;
+    }
+
+    setIsReconnecting(true);
+    setReconnectAttempts(prev => prev + 1);
+
+    const delay = reconnectDelay * Math.pow(2, reconnectAttempts);
+    
+    setTimeout(() => {
+      console.log(`Reconnection attempt ${reconnectAttempts + 1}/${maxReconnectAttempts}`);
+      connectRef.current?.();
+    }, delay);
+  }, [isReconnecting, reconnectAttempts]);
+
+  const handleWebSocketClose = useCallback((event: CloseEvent) => {
+    console.log('Disconnected from admin activity feed, code:', event.code);
+    setConnectionStatus('disconnected');
+    setSocket(null);
+    
+    // Handle token expiration (code 4002)
+    if (event.code === 4002) {
+      handleTokenRefresh();
+    }
+    // Attempt to reconnect if not manually closed
+    else if (event.code !== 1000 && !isReconnecting) {
+      attemptReconnect();
+    }
+  }, [isReconnecting, handleTokenRefresh, attemptReconnect]);
+
   const connect = useCallback(() => {
     // Try both token keys as per the guide
     const token = getAuthToken() || localStorage.getItem('access_token');
@@ -232,16 +302,7 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({ children }
       }
     };
 
-    newSocket.onclose = (event) => {
-      console.log('Disconnected from admin activity feed');
-      setConnectionStatus('disconnected');
-      setSocket(null);
-      
-      // Attempt to reconnect if not manually closed
-      if (event.code !== 1000 && !isReconnecting) {
-        attemptReconnect();
-      }
-    };
+    newSocket.onclose = handleWebSocketClose;
 
     newSocket.onerror = (error) => {
       console.error('WebSocket error:', error);
@@ -262,7 +323,7 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({ children }
         };
         
         fallbackSocket.onmessage = newSocket.onmessage;
-        fallbackSocket.onclose = newSocket.onclose;
+        fallbackSocket.onclose = handleWebSocketClose;
         fallbackSocket.onerror = (fallbackError) => {
           console.error('Fallback WebSocket also failed:', fallbackError);
           setConnectionStatus('error');
@@ -285,7 +346,10 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({ children }
       console.error('Failed to create WebSocket connection:', error);
       setConnectionStatus('error');
     }
-  }, [isReconnecting]);
+  }, [isReconnecting, generateFallbackActivities]);
+  
+  // Store connect function in ref for use by other callbacks
+  connectRef.current = connect;
 
   const handleMessage = useCallback((message: WebSocketMessage) => {
     switch (message.type) {
@@ -375,22 +439,6 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({ children }
         console.log('Unknown message type:', message.type);
     }
   }, [addActivity]);
-
-  const attemptReconnect = useCallback(() => {
-    if (isReconnecting || reconnectAttempts >= maxReconnectAttempts) {
-      return;
-    }
-
-    setIsReconnecting(true);
-    setReconnectAttempts(prev => prev + 1);
-
-    const delay = reconnectDelay * Math.pow(2, reconnectAttempts);
-    
-    setTimeout(() => {
-      console.log(`Reconnection attempt ${reconnectAttempts + 1}/${maxReconnectAttempts}`);
-      connect();
-    }, delay);
-  }, [isReconnecting, reconnectAttempts, connect]);
 
   const disconnect = useCallback(() => {
     if (socket) {

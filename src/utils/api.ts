@@ -114,17 +114,111 @@ export const apiFetch = async (url: string, options: RequestInit = {}) => {
         
         // Handle specific error cases
         if (response.status === 401) {
-          // Clear auth state and redirect to login
+          // Try to refresh the token first
+          const refreshToken = localStorage.getItem('refresh_token') || localStorage.getItem('refresh-token');
+          
+          if (refreshToken) {
+            try {
+              const refreshResponse = await fetch(`${API_PREFIXED_BASE}/token/refresh/`, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ refresh: refreshToken }),
+                credentials: 'include',
+              });
+
+              if (refreshResponse.ok) {
+                const refreshData = await refreshResponse.json();
+                if (refreshData.access) {
+                  // Store new access token
+                  setAuthToken(refreshData.access);
+                  localStorage.setItem('access_token', refreshData.access);
+                  
+                  // Retry the original request with new token
+                  requestHeaders.set('Authorization', `Bearer ${refreshData.access}`);
+                  const retryResponse = await fetch(fullUrl, {
+                    ...options,
+                    headers: requestHeaders,
+                    credentials: 'include',
+                  });
+                  
+                  // Return the retry response
+                  if (retryResponse.ok) {
+                    const contentType = retryResponse.headers.get('content-type');
+                    if (!contentType || !contentType.includes('application/json')) {
+                      return retryResponse;
+                    }
+                    return retryResponse.json();
+                  }
+                }
+              }
+            } catch (refreshError) {
+              console.error('Token refresh failed:', refreshError);
+            }
+          }
+          
+          // If refresh failed or no refresh token, clear auth and redirect to login
           removeAuthToken();
           localStorage.removeItem('user');
           localStorage.removeItem('isAdmin');
+          localStorage.removeItem('access_token');
+          localStorage.removeItem('refresh_token');
+          localStorage.removeItem('refresh-token');
           window.location.href = '/login';
           errorMessage = 'Your session has expired. Please log in again.';
         } else if (errorData.code === 'token_not_valid' || errorData.detail?.includes('token not valid')) {
+          // Try to refresh the token first
+          const refreshToken = localStorage.getItem('refresh_token') || localStorage.getItem('refresh-token');
+          
+          if (refreshToken) {
+            try {
+              const refreshResponse = await fetch(`${API_PREFIXED_BASE}/token/refresh/`, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ refresh: refreshToken }),
+                credentials: 'include',
+              });
+
+              if (refreshResponse.ok) {
+                const refreshData = await refreshResponse.json();
+                if (refreshData.access) {
+                  // Store new access token
+                  setAuthToken(refreshData.access);
+                  localStorage.setItem('access_token', refreshData.access);
+                  
+                  // Retry the original request with new token
+                  requestHeaders.set('Authorization', `Bearer ${refreshData.access}`);
+                  const retryResponse = await fetch(fullUrl, {
+                    ...options,
+                    headers: requestHeaders,
+                    credentials: 'include',
+                  });
+                  
+                  // Return the retry response
+                  if (retryResponse.ok) {
+                    const contentType = retryResponse.headers.get('content-type');
+                    if (!contentType || !contentType.includes('application/json')) {
+                      return retryResponse;
+                    }
+                    return retryResponse.json();
+                  }
+                }
+              }
+            } catch (refreshError) {
+              console.error('Token refresh failed:', refreshError);
+            }
+          }
+          
           // Handle JWT token expiration specifically
           removeAuthToken();
           localStorage.removeItem('user');
           localStorage.removeItem('isAdmin');
+          localStorage.removeItem('access_token');
+          localStorage.removeItem('refresh_token');
+          localStorage.removeItem('refresh-token');
           window.location.href = '/login';
           errorMessage = 'Your session has expired. Please log in again.';
         } else if (response.status === 403) {

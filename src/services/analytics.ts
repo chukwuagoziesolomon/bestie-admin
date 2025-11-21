@@ -57,6 +57,72 @@ export interface TopVendorsResponse {
 export const getOrderActivity = async (period: string = 'week'): Promise<OrderActivityResponse> => {
   try {
     const response = await apiFetch(`/admin/dashboard/order-activity/?period=${period}`);
+    
+    // Check if response has the expected format
+    if (response.chart_data) {
+      return response;
+    }
+    
+    // If response has orders array instead, transform it
+    if (response.orders && Array.isArray(response.orders)) {
+      const orders = response.orders;
+      const totalOrders = response.total_count || orders.length;
+      
+      // Count orders by status
+      const statusCounts: { [key: string]: number } = {};
+      orders.forEach((order: any) => {
+        const status = order.status || 'unknown';
+        statusCounts[status] = (statusCounts[status] || 0) + 1;
+      });
+      
+      // Define status colors and labels
+      const statusConfig: { [key: string]: { label: string; color: string } } = {
+        delivered: { label: 'Delivered', color: '#10B981' },
+        completed: { label: 'Completed', color: '#10B981' },
+        cancelled: { label: 'Cancelled', color: '#EF4444' },
+        rejected: { label: 'Rejected', color: '#6B7280' },
+        pending: { label: 'Pending', color: '#F59E0B' },
+        processing: { label: 'Processing', color: '#3B82F6' },
+        ready: { label: 'Ready', color: '#8B5CF6' },
+        confirmed: { label: 'Confirmed', color: '#06B6D4' },
+      };
+      
+      // Create chart data
+      const chart_data: OrderActivityChartData[] = Object.entries(statusCounts).map(([status, count]) => {
+        const config = statusConfig[status] || { label: status, color: '#6B7280' };
+        return {
+          status,
+          label: config.label,
+          count,
+          percentage: totalOrders > 0 ? (count / totalOrders) * 100 : 0,
+          color: config.color,
+        };
+      });
+      
+      // Calculate summary
+      const completed = (statusCounts.completed || 0) + (statusCounts.delivered || 0);
+      const pending = (statusCounts.pending || 0) + (statusCounts.processing || 0) + (statusCounts.ready || 0) + (statusCounts.confirmed || 0);
+      const rejected = (statusCounts.rejected || 0) + (statusCounts.cancelled || 0);
+      const completion_rate = totalOrders > 0 ? (completed / totalOrders) * 100 : 0;
+      
+      // Transform to expected format
+      return {
+        period: response.period || period,
+        date_range: {
+          start_date: new Date().toISOString(),
+          end_date: new Date().toISOString(),
+        },
+        total_orders: totalOrders,
+        chart_data,
+        summary: {
+          completed,
+          pending,
+          rejected,
+          completion_rate,
+        },
+      };
+    }
+    
     return response;
   } catch (error) {
     console.error('Error fetching order activity:', error);
@@ -140,7 +206,7 @@ export interface ProfitDetailedResponse {
  */
 export const getProfitSummary = async (params?: { period?: string; start_date?: string; end_date?: string }): Promise<ProfitSummary> => {
   try {
-    let query = '/api/user/admin/profit/';
+    let query = '/user/admin/profit/';
     if (params) {
       const queryParams = new URLSearchParams();
       if (params.period) queryParams.append('period', params.period);
@@ -161,7 +227,7 @@ export const getProfitSummary = async (params?: { period?: string; start_date?: 
  */
 export const getProfitDetailed = async (params?: { start_date?: string; end_date?: string; page?: number; page_size?: number }): Promise<ProfitDetailedResponse> => {
   try {
-    let query = '/api/user/admin/profit/detailed/';
+    let query = '/user/admin/profit/detailed/';
     if (params) {
       const queryParams = new URLSearchParams();
       if (params.start_date) queryParams.append('start_date', params.start_date);
